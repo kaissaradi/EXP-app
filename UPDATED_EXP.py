@@ -10,7 +10,7 @@ class ExperienceTracker:
 
     total_experience = lambda self, selected_experience: sum(experience["amount"] for experience in selected_experience)
 
-# List of Activities
+# List of Activities (change ammount and name to what matches your goals)
 tracker = ExperienceTracker()
 tracker.add_experience(5.50, "Run")
 tracker.add_experience(5.50, "Climb")
@@ -29,7 +29,7 @@ root = ThemedTk(theme="clam")
 root.geometry("600x500")
 
 # Entry Label and widget
-entry_label = tk.Label(root, text="Enter Multiplier")
+entry_label = tk.Label(root, text="Enter Multiplier") # multiplier is how maniy you got done in the day
 entry_label.pack()
 entry = tk.Entry(root) # widget
 entry.pack(pady=10)
