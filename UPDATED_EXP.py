@@ -63,7 +63,7 @@ def calc_exp():
         base_exp = tracker.total_experience(selected_experience)
         total_exp = multiplier * base_exp
         progress.set(total_exp)
-        update_progressbar()
+        update_progressbar(total_exp)
         Total_exp_display.config(text=f"Total Experience: {total_exp:.2f}")
     except ValueError:
         print("error")
