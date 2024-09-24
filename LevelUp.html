@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .checkbox-container {
+            margin-bottom: 20px;
+        }
+        progress {
+            width: 100%;
+            height: 20px;
+        }
+        button {
+            margin: 10px 0;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Level Up</h1>
+    <div id="checkboxes" class="checkbox-container"></div>
+    <button onclick="calcExp()">Get EXP!</button>
+    <p id="totalExpDisplay">Total Experience: </p>
+    <progress id="progressBar" value="0" max="500"></progress> <!-- progressbar values-->
+    <button onclick="window.close()">GO out and earn more!</button>
+
+    <script>
+        class ExperienceTracker {
+            constructor() {
+                this.experience = [];
+            }
+
+            addExperience(amount, category) {
+                this.experience.push({amount, category});
+            }
+
+            totalExperience(selectedExperience) {
+                return selectedExperience.reduce((sum, exp) => sum + exp.amount, 0);
+            }
+        }
+
+        const tracker = new ExperienceTracker();
+        tracker.addExperience(5.50, "Run");
+        tracker.addExperience(5.50, "Climb");
+        tracker.addExperience(7.25, "Studying / Coding");
+        tracker.addExperience(7.25, "Reading");
+        tracker.addExperience(3.00, "Cold Showers");
+        tracker.addExperience(4.50, "Eat Healthily");
+        tracker.addExperience(5.00, "Puzzle Rush Set");
+
+        function updateExpenseCheckboxes() {
+            const checkboxContainer = document.getElementById('checkboxes');
+            checkboxContainer.innerHTML = '';
+            tracker.experience.forEach((exp, index) => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `exp-${index}`;
+                checkbox.value = exp.amount;
+                
+                const label = document.createElement('label');
+                label.htmlFor = `exp-${index}`;
+                label.textContent = exp.category;
+
+                checkboxContainer.appendChild(checkbox);
+                checkboxContainer.appendChild(label);
+                checkboxContainer.appendChild(document.createElement('br'));
+            });
+        }
+
+        function calcExp() {
+            const checkboxes = document.querySelectorAll('#checkboxes input[type="checkbox"]:checked');
+            const selectedExperience = Array.from(checkboxes).map(cb => ({amount: parseFloat(cb.value)}));
+            const baseExp = tracker.totalExperience(selectedExperience);
+            const totalExp = checkboxes.length * baseExp;
+
+            document.getElementById('totalExpDisplay').textContent = `Total Experience: ${totalExp.toFixed(2)}`;
+            document.getElementById('progressBar').value = totalExp;
+        }
+
+        updateExpenseCheckboxes();
+    </script>
+</body>
+</html>
