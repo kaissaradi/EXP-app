@@ -169,13 +169,13 @@
         }
 
         // Initialize default users
-        users['carson'] = new User('user1', 'password1');
+        users['carson'] = new User('Carson', 'cbix');
         users['austin'] = new User('user2', 'password2');
          
 
 
         // Initialize default experiences for these users
-        initializeDefaultExperiences(users['user1']);
+        initializeDefaultExperiences(users['carson']);
         initializeDefaultExperiences(users['user2']);  
 
         let currentUser = null;
@@ -208,17 +208,23 @@
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-
-            if (users[username] && users[username].password === password) {
-            currentUser = users[username];
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-            updateExpenseCheckboxes();
-            updateTotalExpDisplay();
-            } else {
-            alert("Invalid username or password");
-            }
-        }
+    
+    if (!users[username]) {
+        alert("Username not found. Please check your username or register a new account.");
+        return;
+    }
+    
+    if (users[username].password !== password) {
+        alert("Incorrect password. Please try again.");
+        return;
+    }
+    
+    currentUser = users[username];
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    updateExpenseCheckboxes();
+    updateTotalExpDisplay();
+}
 
         function updateExpenseCheckboxes() {
             const checkboxContainer = document.getElementById('checkboxes');
