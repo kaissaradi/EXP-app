@@ -4,135 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level Up</title>
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #007932;
-            --background-color: #000000;
-            --text-color: #333;
-        }
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            background-color: var(--background-color);
-            color: var(--secondary-color);
-            line-height: 1.6;
-        }
-        h1 {
-            color: var(--secondary-color);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .checkbox-container {
-            background-color: var(--text-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px, var(--secondary-color);
-        }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 10px;
-        }
-        progress {
-            width: 100%;
-            height: 10px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        progress::-webkit-progress-bar {
-            background-color: var(--text-color);
-            border-radius: 5px;
-        }
-        progress::-webkit-progress-value {
-            background-color: var(--secondary-color);
-            border-radius: 5px;
-        }
-        button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: block;
-            margin: 20px auto;
-        }
-        #totalExpDisplay {
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    
-        .checkbox-container {
-            animation: fadeIn 0.5s ease-out;
-        }
-    
-        button {
-            transition: transform 0.2s;
-        }
-    
-        button:active {
-            transform: scale(0.90);
-        }
-        #loginForm {
-            background-color: var(--text-color);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 300px;
-            margin: 100px auto;
-        }
-        #loginForm input {
-            width: 92.5%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        #loginForm button {
-            width: 100%;
-            padding: 10px;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        #mainContent {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!--Log in form page content-->
-    <div id="loginForm">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button onclick="login()">Login</button>
-        <button onclick="showRegister()">Register</button>
     </div>
-    <!--main window content -->
-    <div id="registerForm" style="display: none;">
-        <h2>Register</h2>
-        <input type="text" id="newUsername" placeholder="Username" required>
-        <input type="password" id="newPassword" placeholder="Password" required>
-        <button onclick="register()">Register</button>
-        <button onclick="showLogin()">Back to Login</button>
-    </div>
-     <!--main window content --> <div id="mainContent"> 
+    <!--main window content --> 
+    <div id="mainContent" style="display: none;"> 
         <h1>Level Up</h1> 
     <div id="checkboxes" class="checkbox-container"></div>
     <button onclick="calcExp()">Get EXP!</button> 
@@ -140,143 +17,22 @@
     <progress id="progressBar" value="0" max="500"></progress> 
     <button onclick="window.close()">Go out and earn more!</button> 
     </div>
+    <!--Log in form page content-->
+    <div id="loginForm">
+        <h2>Login</h2>
+        <input type="text" name="username" id ="username" placeholder="Username" autocomplete="off" required>
+        <input type="password" name="password" id ="password" placeholder="Password" autocomplete="off" required>
+        <button onclick="login()">Login</button>
+        <button onclick="showRegister()">Register</button>
+    </div>
+    <!--register window content -->
+    <div id="registerForm" style="display: none;">
+        <h2>Register</h2>
+        <input type="text" id="newUsername" placeholder="Username" required>
+        <input type="password" id="newPassword" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+        <button onclick="showLogin()">Back to Login</button>
 
-    <script>
-        // User management system
-        const users = {};
-
-        class User {
-            constructor(username, password) {
-                this.username = username;
-                this.password = password;
-                this.tracker = new ExperienceTracker();
-                this.totalAccumulatedExp = 0;
-            }
-        }
-
-        class ExperienceTracker {
-            constructor() {
-                this.experience = [];
-            }
-
-            addExperience(amount, category) {
-                this.experience.push({amount, category});
-            }
-
-            totalExperience(selectedExperience) {
-                return selectedExperience.reduce((sum, exp) => sum + exp.amount, 0);
-            }
-        }
-
-        // Initialize default users
-        users['carson'] = new User('Carson', 'cbix');
-        users['austin'] = new User('user2', 'password2');
-         
-
-
-        // Initialize default experiences for these users
-        initializeDefaultExperiences(users['carson']);
-        initializeDefaultExperiences(users['user2']);  
-
-        let currentUser = null;
-        const maxExp = 500;
-
-        function showRegister() {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'block';
-        }
-
-        function showLogin() {
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'block';
-        }
-
-        function register() {
-            const username = document.getElementById('newUsername').value;
-            const password = document.getElementById('newPassword').value;
-
-            if (users[username]) {
-                alert("Username already exists!");
-                return;
-            }
-
-            users[username] = new User(username, password);
-            alert("Registration successful! Please log in.");
-            showLogin();
-        }
-
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-    
-    if (!users[username]) {
-        alert("Username not found. Please check your username or register a new account.");
-        return;
-    }
-    
-    if (users[username].password !== password) {
-        alert("Incorrect password. Please try again.");
-        return;
-    }
-    
-    currentUser = users[username];
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('mainContent').style.display = 'block';
-    updateExpenseCheckboxes();
-    updateTotalExpDisplay();
-}
-
-        function updateExpenseCheckboxes() {
-            const checkboxContainer = document.getElementById('checkboxes');
-            checkboxContainer.innerHTML = '';
-            currentUser.tracker.experience.forEach((exp, index) => {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `exp-${index}`;
-                checkbox.value = exp.amount;
-                const label = document.createElement('label');
-                label.htmlFor = `exp-${index}`;
-                label.textContent = exp.category;
-                checkboxContainer.appendChild(checkbox);
-                checkboxContainer.appendChild(label);
-                checkboxContainer.appendChild(document.createElement('br'));
-            });
-        }
-
-        function calcExp() {
-            const checkboxes = document.querySelectorAll('#checkboxes input[type="checkbox"]:checked');
-            const selectedExperience = Array.from(checkboxes).map(cb => ({amount: parseFloat(cb.value)}));
-            const baseExp = currentUser.tracker.totalExperience(selectedExperience);
-            const newExp = checkboxes.length * baseExp;
-            currentUser.totalAccumulatedExp += newExp;
-            updateTotalExpDisplay();
-            checkboxes.forEach(cb => cb.checked = false);
-        }
-
-        function updateTotalExpDisplay() {
-            const levels = Math.floor(currentUser.totalAccumulatedExp / maxExp);
-            const remainingExp = currentUser.totalAccumulatedExp % maxExp;
-            const progressBar = document.getElementById('progressBar');
-            progressBar.value = remainingExp;
-            document.getElementById('totalExpDisplay').textContent = `Total Experience: ${currentUser.totalAccumulatedExp} (Level ${levels}, ${remainingExp}/${maxExp})`;
-        }
-
-        // Initialize some default experiences for new users
-        function initializeDefaultExperiences(user) {
-            user.tracker.addExperience(5, "Run");
-            user.tracker.addExperience(5, "Climb");
-            user.tracker.addExperience(7, "Studying / Coding");
-            user.tracker.addExperience(7, "Reading");
-            user.tracker.addExperience(3, "Cold Showers");
-            user.tracker.addExperience(3, "Eat Healthily");
-            user.tracker.addExperience(5, "Puzzle Rush Set");
-}
-
-        // When a new user registers, initialize their experiences
-        function register() {
-            // ... (existing register code)
-            initializeDefaultExperiences(users[username]);
-        }
-    </script>
+    <script src="javascript.js"></script>
 </body>
 </html>
