@@ -10,29 +10,23 @@ class ExperienceTracker:
 
     total_experience = lambda self, selected_experience: sum(experience["amount"] for experience in selected_experience)
 
-# List of Activities (change ammount and name to what matches your goals)
+# List of Activities (change amount and name to what matches your goals)
 tracker = ExperienceTracker()
-tracker.add_experience(5.50, "Run")
-tracker.add_experience(5.50, "Climb")
-tracker.add_experience(3.50, "Workout")
-tracker.add_experience(7.25, "Studying / Coding")
-tracker.add_experience(7.25, "Reading")
-tracker.add_experience(3.50, "School")
-tracker.add_experience(3.00, "Cold Showers")
-tracker.add_experience(4.50, "Eat Healthily")
-tracker.add_experience(5.00, "Puzzle Rush Set")
+tracker.add_experience(5, "Run")
+tracker.add_experience(5, "Climb")
+tracker.add_experience(3, "Workout")
+tracker.add_experience(7, "Studying / Coding")
+tracker.add_experience(7, "Reading")
+tracker.add_experience(3, "School")
+tracker.add_experience(3, "Cold Showers")
+tracker.add_experience(3, "Eat Healthily")
+tracker.add_experience(5, "Puzzle Rush Set")
 
 
 
 # main window 
 root = ThemedTk(theme="clam")
 root.geometry("600x500")
-
-# Entry Label and widget
-entry_label = tk.Label(root, text="Enter Multiplier") # multiplier is how maniy you got done in the day
-entry_label.pack()
-entry = tk.Entry(root) # widget
-entry.pack(pady=10)
 
 # Create a list to store the state of each checkbox
 checkbox_vars = []
@@ -44,7 +38,7 @@ def update_expense_checkboxes():
 
     for experience in tracker.experience:
         var = tk.BooleanVar()
-        checkbox = tk.Checkbutton(root, text=f"{experience['category']}: {experience['amount']:.2f}", variable=var)
+        checkbox = tk.Checkbutton(root, text=f"{experience['category']}", variable=var)
         checkbox.pack(pady=1)
         checkbox_vars.append((var, experience))
 
@@ -55,13 +49,13 @@ def update_progressbar(total_exp):
     root.update_idletasks()
 
 
-# final function tied to split money button
+# final function tied to get exp button
 def calc_exp():
     try:
-        multiplier = float(entry.get())
+        checked_count = sum(var.get() for var, _ in checkbox_vars)
         selected_experience = [experience for var, experience in checkbox_vars if var.get()]
         base_exp = tracker.total_experience(selected_experience)
-        total_exp = multiplier * base_exp
+        total_exp = checked_count * base_exp
         progress.set(total_exp)
         update_progressbar(total_exp)
         Total_exp_display.config(text=f"Total Experience: {total_exp:.2f}")
@@ -80,7 +74,7 @@ Total_exp_display.pack()
 
 # Progress bar & progress definition
 progress = tk.IntVar()
-progressbar = ttk.Progressbar(root, length=200, mode='determinate', maximum=2240, variable=progress)
+progressbar = ttk.Progressbar(root, length=200, mode='determinate', maximum=500, variable=progress)
 progressbar.pack()
 
 # Create and place the exit button
